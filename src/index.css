@@ -5,24 +5,39 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
+  background-color: black;
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-code div {
-  padding-left: 16px;
-  padding-right: 16px;
+h2 {
+  text-align: center;
+  color: whitesmoke;
+  opacity: 0.7;
 }
 
-code div div {
+.item {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+  background-color: lightgoldenrodyellow;
+}
+
+.item .name {
+  color: darkred;
+}
+
+.item .price {
   text-align: right;
   font-weight: bold;
   text-decoration: double;
+  background-color: #4caf50;
+  color: lightgray;
 }
 
-h2 {
-  text-align: center;
+.loader {
+  width: 50%;
+  height: 50%;
+  color: white;
 }

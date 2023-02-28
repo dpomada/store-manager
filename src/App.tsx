@@ -1,8 +1,15 @@
+import get from "lodash.get";
 import { Suspense, useEffect, useState } from "react";
 import { useQuery, useSubscription } from "@apollo/client";
 import { createApolloClient, createWSClient } from "./client";
 import { QUERY_ORDERS, SUB_COUNTER } from "./data/orders-db";
-import { Order } from "./ui/orders";
+import { Loader } from "./ui/Loader";
+import { OrderTitle } from "./ui/OrderTitle";
+import { OrderList } from "./ui/OrderList";
+
+
+const ORDER_PATH = "data.order";
+const COUNT_PATH = "data.customer_aggregate.aggregate.count";
 
 export function App() {
   const [orders, setOrders] = useState([]);
@@ -13,27 +20,14 @@ export function App() {
   const counterStream = useSubscription(SUB_COUNTER, { client: wsClient });
 
   useEffect(() => {
-    if (counterStream?.data?.customer_aggregate?.aggregate?.count) {
-      setCounter(counterStream?.data?.customer_aggregate?.aggregate?.count);
-    }
-
-    if (ordersReq?.data?.order) {
-      setOrders(ordersReq?.data?.order);
-    }
+    setOrders(get(ordersReq, ORDER_PATH, []));
+    setCounter(get(counterStream, COUNT_PATH, 0));
   }, [ordersReq, counterStream]);
 
   return (
-    <div className="app">
-      <Suspense fallback={<h1>Loading...</h1>}>
-        <div>
-          <h2>
-            ({orders.length} Orders) from [{counter} cus]
-          </h2>
-          {orders.map((order: { product: string; purchase_price: string }) => (
-            <Order name={order.product} price={order.purchase_price} />
-          ))}
-        </div>
-      </Suspense>
-    </div>
+    <Suspense fallback={<Loader />}>
+      <OrderTitle size={orders.length} counter={counter} />
+      <OrderList orders={orders} />
+    </Suspense>
   );
 }
